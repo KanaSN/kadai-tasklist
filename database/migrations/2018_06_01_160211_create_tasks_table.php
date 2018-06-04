@@ -14,13 +14,11 @@ class CreateTasksTable extends Migration
     public function up()
     {
         Schema::create('tasks', function (Blueprint $table) {
-          
-          $tasks->increments('id');
-          $tasks->string('content');
-          $tasks->timestamps();
+            $table->increments('id');
+            $table->string('content');
+            $table->timestamps();
         });
     }
-          
 
     /**
      * Reverse the migrations.
