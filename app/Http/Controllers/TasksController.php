@@ -40,8 +40,13 @@ public function create()
 
         ]);
     }
+    
 public function store(Request $request)
     {
+        $this->validate($request, [
+            'content' => 'required|max:191',
+        ]);
+
         $task = new Task;
         $task->content = $request->content;
         $task->save();
@@ -60,6 +65,10 @@ public function store(Request $request)
     
     public function update(Request $request, $id)
     {
+        $this->validate($request, [
+            'content' => 'required|max:191',
+        ]);
+
         $task = Task::find($id);
         $task->content = $request->content;
         $task->save();
