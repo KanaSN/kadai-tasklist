@@ -15,33 +15,47 @@ class TasksController extends Controller
      */
     public function index()
     {
-        $tasks = Task::all();
-
-        return view('tasks.index', [
-            'tasks' => $tasks,
-        ]);
+        if (\Auth::check()) {
+            
+            $user= \Auth::user();
+            $tasks = $user->tasks;
+            return view('tasks.index', [
+                'tasks' => $tasks,
+            ]);
+            
+        } else {
+            return view('welcome');
+        }
+        
+        
     }
     
     public function show($id)
     {
         $task = Task::find($id);
-
+        if($task->user_id == \Auth::user()->id){
         return view('tasks.show', [
             'task' => $task,
         ]);
+    } else {
+        return redirect('/');
+        
     }
-public function create()
+        
+   }
+    
+    
+   public function create()
     {
+        
         $task = new Task;
 
         return view('tasks.create', [
             'task' => $task
-
-
         ]);
     }
     
-public function store(Request $request)
+   public function store(Request $request)
     {
         $this->validate($request, [
             'status' => 'required|max:10',
@@ -51,19 +65,26 @@ public function store(Request $request)
         $task = new Task;
         $task->status = $request->status;
         $task->content = $request->content;
+        $task->user_id =\Auth::user()->id; 
         $task->save();
-
+ 
         return redirect('/');
     }
     
      public function edit($id)
     {
         $task = Task::find($id);
-
+        if($task->user_id == \Auth::user()->id){
         return view('tasks.edit', [
             'task' => $task,
         ]);
+    } else {
+        return redirect('/');
+        
     }
+        
+}
+    
     
     public function update(Request $request, $id)
     {
